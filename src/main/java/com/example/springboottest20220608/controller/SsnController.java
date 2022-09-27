@@ -1,6 +1,7 @@
 package com.example.springboottest20220608.controller;
 
 import com.example.springboottest20220608.entity.Ssn;
+import com.example.springboottest20220608.exception.WrongControlCharacterException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -54,7 +55,7 @@ public class SsnController {
     }
 
     @PostMapping
-    public String ssnValidation(@RequestBody Ssn ssn) {
+    public String ssnValidation(@RequestBody Ssn ssn) throws WrongControlCharacterException {
 
         String ssnStr = "";
 
@@ -79,15 +80,17 @@ public class SsnController {
 
             // check if the calculated controlChar matches the control character in ssn
             if(!controlChar.equals(Character.toString(ssnArr[ssnArr.length - 1])))
-                return ssn.toString() +
-                        "\nssn validation: false" +
-                        "\nCalculated control character: " + controlChar +
-                        "\nReceived control character: " + ssnArr[ssnArr.length - 1];
 
-            return ssn.toString() +
-                    "\nssn validation: true" +
-                    "\nCalculated control character: " + controlChar +
-                    "\nReceived control character: " + ssnArr[ssnArr.length - 1];
+                // error handling for wrong control character
+                throw new WrongControlCharacterException(ssn.getSsn(), controlChar);
+
+//                return ssn.toString() +
+//                        "\nssn validation: false" +
+//                        "\nCalculated control character: " + controlChar +
+//                        "\nReceived control character: " + ssnArr[ssnArr.length - 1];
+
+            return ssn +
+                    "\nssn validation: true";
 
         } else {
             return ssn + "\n" + "FALSE!";
