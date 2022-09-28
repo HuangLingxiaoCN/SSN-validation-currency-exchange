@@ -22,11 +22,11 @@ public class WrongControlCharacterException extends RuntimeException {
         this.ssn = ssn;
     }
 
-    public String getControlCharacter() {
+    public String getCorrectControlCharacter() {
         return correctControlCharacter;
     }
 
-    public void setControlCharacter(String correctControlCharacter) {
+    public void setCorrectControlCharacter(String correctControlCharacter) {
         this.correctControlCharacter = correctControlCharacter;
     }
 }

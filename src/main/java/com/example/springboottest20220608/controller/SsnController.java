@@ -1,6 +1,7 @@
 package com.example.springboottest20220608.controller;
 
 import com.example.springboottest20220608.entity.Ssn;
+import com.example.springboottest20220608.exception.SsnLengthException;
 import com.example.springboottest20220608.exception.WrongControlCharacterException;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +12,6 @@ import static java.util.Map.entry;
 @RestController
 @RequestMapping("/api/ssn")
 public class SsnController {
-
-    private Ssn ssn;
 
     // all control characters
     private Map<String, String> controlCharacters = Map.ofEntries(
@@ -49,13 +48,8 @@ public class SsnController {
             entry("30", "Y")
     );
 
-    @GetMapping("/hello")
-    public String sayHello() {
-        return "Hello Spring Boot!";
-    }
-
     @PostMapping
-    public String ssnValidation(@RequestBody Ssn ssn) throws WrongControlCharacterException {
+    public String ssnValidation(@RequestBody Ssn ssn) {
 
         String ssnStr = "";
 
@@ -84,18 +78,11 @@ public class SsnController {
                 // error handling for wrong control character
                 throw new WrongControlCharacterException(ssn.getSsn(), controlChar);
 
-//                return ssn.toString() +
-//                        "\nssn validation: false" +
-//                        "\nCalculated control character: " + controlChar +
-//                        "\nReceived control character: " + ssnArr[ssnArr.length - 1];
-
-            return ssn +
-                    "\nssn validation: true";
+            return ssn + "\nssn validation: true";
 
         } else {
-            return ssn + "\n" + "FALSE!";
+            throw new SsnLengthException(ssn.getSsn());
         }
-
 
     }
 }
