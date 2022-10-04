@@ -1,10 +1,10 @@
 package com.example.springboottest20220608.controller;
 
 import com.example.springboottest20220608.entity.ExchangeAmount;
+import com.example.springboottest20220608.entity.ExchangeRate;
 import com.example.springboottest20220608.exception.NoSupportedCurrencyException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Map;
 
 @RestController
@@ -89,25 +93,41 @@ public class ExchangeAmountController {
 
         String url = "https://api.apilayer.com/exchangerates_data/latest?symbols=USD%2CSEK&base=EUR";
         String apiKey = "gvCtnrLeF5EvK4HnTyElEmi7ldIUfhSO";
-        Request request = new Request.Builder()
+/*        Request request = new Request.Builder()
                 .url(url)
                 .addHeader("apikey", apiKey)
+                .build();*/
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .GET()
+                .header("accept", "application/json")
+                .header("apiKey", apiKey)
+                .uri(URI.create(url))
                 .build();
 
         try {
-            Response response = client.newCall(request).execute();
-            System.out.println(response.body().string());
+/*            Response response = client.newCall(request).execute();
+            System.out.println(response.body().string());*/
+            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            ExchangeRate exchangeRate = objectMapper.readValue(httpResponse.body(), ExchangeRate.class);
+            System.out.println(exchangeRate);
 
             //
-            return response.body().toString();
+            return exchangeRate.toString();
 
             //
 
+        }
+        catch (InterruptedException e) {
+            throw new RuntimeException(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        return null;
+//        return null;
     }
 
 }
