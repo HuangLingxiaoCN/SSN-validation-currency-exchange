@@ -4,7 +4,6 @@ import com.example.springboottest20220608.entity.ExchangeAmount;
 import com.example.springboottest20220608.entity.ExchangeRate;
 import com.example.springboottest20220608.exception.NoSupportedCurrencyException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import okhttp3.OkHttpClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,18 +16,17 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/exchange")
 public class ExchangeAmountController {
 
     // locally stored exchange rate
-    private Map<String, BigDecimal> exchangeRate = Map.of(
+/*    private Map<String, BigDecimal> exchangeRate = Map.of(
             "eur_to_usd", new BigDecimal("0.96"),
             "eur_to_sek", new BigDecimal("10.91"),
             "usd_to_sek", new BigDecimal("11.37")
-    );
+    );*/
 
     @PostMapping
     public String getExchangeAmount(@RequestBody ExchangeAmount exchangeAmount) {
@@ -37,66 +35,67 @@ public class ExchangeAmountController {
 
         // check all conditions of EUR, SEK and USD exchange
         if (exchangeAmount.getFrom().equalsIgnoreCase("EUR") && exchangeAmount.getTo().equalsIgnoreCase("SEK")) {
+            BigDecimal realTimeRate = getExchangeRate("EUR", "SEK");
             return exchangeAmount.toString()
                     + "\nResult: "
-                    + resultValue.multiply(exchangeRate.get("eur_to_sek")).setScale(3, RoundingMode.HALF_UP)
-                    + "\n"
-                    + getExchangeRate();
+                    + resultValue.multiply(realTimeRate.setScale(3, RoundingMode.HALF_UP))
+                    + "\nReal-time exchange rate: "
+                    + realTimeRate;
         }
 
         if (exchangeAmount.getFrom().equalsIgnoreCase("EUR") && exchangeAmount.getTo().equalsIgnoreCase("USD")) {
+            BigDecimal realTimeRate = getExchangeRate("EUR", "USD");
             return exchangeAmount.toString()
                     + "\nResult: "
-                    + resultValue.multiply(exchangeRate.get("eur_to_usd")).setScale(3, RoundingMode.HALF_UP)
-                    + "n"
-                    + getExchangeRate();
+                    + resultValue.multiply(realTimeRate).setScale(3, RoundingMode.HALF_UP)
+                    + "\nReal-time exchange rate: "
+                    + realTimeRate;
         }
 
         if (exchangeAmount.getFrom().equalsIgnoreCase("SEK") && exchangeAmount.getTo().equalsIgnoreCase("EUR")) {
+            BigDecimal realTimeRate = getExchangeRate("SEK", "EUR");
             return exchangeAmount.toString()
                     + "\nResult: "
-                    + resultValue.divide(exchangeRate.get("eur_to_sek"), 3, RoundingMode.HALF_UP)
-                    + "\n"
-                    + getExchangeRate();
+                    + resultValue.divide(realTimeRate, 3, RoundingMode.HALF_UP)
+                    + "\nReal-time exchange rate: "
+                    + realTimeRate;
         }
 
         if (exchangeAmount.getFrom().equalsIgnoreCase("SEK") && exchangeAmount.getTo().equalsIgnoreCase("USD")) {
+            BigDecimal realTimeRate = getExchangeRate("SEK", "USD");
             return exchangeAmount.toString()
                     + "\nResult: "
-                    + resultValue.divide(exchangeRate.get("usd_to_sek"), 3, RoundingMode.HALF_UP)
-                    + "\n"
-                    + getExchangeRate();
+                    + resultValue.divide(realTimeRate, 3, RoundingMode.HALF_UP)
+                    + "\nReal-time exchange rate: "
+                    + realTimeRate;
         }
 
         if (exchangeAmount.getFrom().equalsIgnoreCase("USD") && exchangeAmount.getTo().equalsIgnoreCase("EUR")) {
+            BigDecimal realTimeRate = getExchangeRate("USD", "EUR");
             return exchangeAmount.toString()
                     + "\nResult: "
-                    + resultValue.divide(exchangeRate.get("eur_to_usd"), 3, RoundingMode.HALF_UP)
-                    + "\n"
-                    + getExchangeRate();
+                    + resultValue.divide(realTimeRate, 3, RoundingMode.HALF_UP)
+                    + "\nReal-time exchange rate: "
+                    + realTimeRate;
         }
 
         if (exchangeAmount.getFrom().equalsIgnoreCase("USD") && exchangeAmount.getTo().equalsIgnoreCase("SEK")) {
+            BigDecimal realTimeRate = getExchangeRate("USD", "SEK");
             return exchangeAmount.toString()
                     + "\nResult: "
-                    + resultValue.multiply(exchangeRate.get("usd_to_sek")).setScale(3, RoundingMode.HALF_UP)
-                    + "\n"
-                    + getExchangeRate();
+                    + resultValue.multiply(realTimeRate).setScale(3, RoundingMode.HALF_UP)
+                    + "\nReal-time exchange rate: "
+                    + realTimeRate;
         }
 
         throw new NoSupportedCurrencyException(exchangeAmount.getFrom(), exchangeAmount.getTo());
 
     }
 
-    public String getExchangeRate() {
-        OkHttpClient client = new OkHttpClient();
-
-        String url = "https://api.apilayer.com/exchangerates_data/latest?symbols=USD%2CSEK&base=EUR";
+    public BigDecimal getExchangeRate(String from, String to) {
+        BigDecimal rate = new BigDecimal(0);
+        String url = "https://api.apilayer.com/exchangerates_data/latest?symbols="+to+"&base="+from;
         String apiKey = "gvCtnrLeF5EvK4HnTyElEmi7ldIUfhSO";
-/*        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("apikey", apiKey)
-                .build();*/
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -107,27 +106,22 @@ public class ExchangeAmountController {
                 .build();
 
         try {
-/*            Response response = client.newCall(request).execute();
-            System.out.println(response.body().string());*/
             HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
             ObjectMapper objectMapper = new ObjectMapper();
             ExchangeRate exchangeRate = objectMapper.readValue(httpResponse.body(), ExchangeRate.class);
+
+            String rateString = exchangeRate.getRates().toString();
+            rate = BigDecimal.valueOf(Double.parseDouble(rateString.substring(5, rateString.length() - 2)));
+
             System.out.println(exchangeRate);
-
-            //
-            return exchangeRate.toString();
-
-            //
-
+            System.out.println(rate);
         }
-        catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
 
-//        return null;
+        return rate;
     }
 
 }

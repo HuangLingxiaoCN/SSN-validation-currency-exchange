@@ -50,9 +50,7 @@ public class ExchangeRate {
     @Override
     public String toString() {
         return "ExchangeRate{" +
-                "success=" + success +
-                ", base='" + base + '\'' +
-                ", rates=" + rates +
+                "rates=" + rates +
                 '}';
     }
 }
