@@ -16,4 +16,4 @@
 1. Ssn validation
 ![image](https://user-images.githubusercontent.com/37361235/192845616-b6c5fb18-5273-43cf-9165-5dda804e61dc.png)
 2. Currency exchange 
-![image](https://user-images.githubusercontent.com/37361235/192845847-bfb2aed2-4d0e-4769-b6e3-f1c3e2d38853.png)
+![image](https://user-images.githubusercontent.com/37361235/194552749-4dd74309-cdf6-4204-9871-7714f95944f7.png)
