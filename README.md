@@ -4,7 +4,7 @@
 ## How to run the application
 1. Download the project
 2. Import the project into Intellij Idea (or any other IDEs)
-3. Run the spring boot applicaiton with the name "SpringbootTest20220608Application"
+3. Run the spring boot application with the name "SpringbootTest20220608Application"
 
 ## REST API endpoints
 1. http://localhost:8080/api/ssn POST
