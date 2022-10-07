@@ -1,8 +1,6 @@
 # Springboot test 20220608
 ## A backend api server for validating Social Security Number(SSN) and currency exchange among EUR, SEK and USD
 
-### PS: Scheduled execution of exchange rate update is not finished yet.
-
 ## How to run the application
 1. Download the project
 2. Import the project into Intellij Idea (or any other IDEs)
