@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class WrongControlCharacterException extends RuntimeException {
     private String ssn;
-    private String correctControlCharacter;
+    private char correctControlCharacter;
 
-    public WrongControlCharacterException(String ssn, String correctControlCharacter) {
+    public WrongControlCharacterException(String ssn, char correctControlCharacter) {
         super(String.format("ssn: %s has wrong control character. It should be %s ", ssn, correctControlCharacter));
         this.ssn = ssn;
         this.correctControlCharacter = correctControlCharacter;
@@ -22,11 +22,11 @@ public class WrongControlCharacterException extends RuntimeException {
         this.ssn = ssn;
     }
 
-    public String getCorrectControlCharacter() {
+    public char getCorrectControlCharacter() {
         return correctControlCharacter;
     }
 
-    public void setCorrectControlCharacter(String correctControlCharacter) {
+    public void setCorrectControlCharacter(char correctControlCharacter) {
         this.correctControlCharacter = correctControlCharacter;
     }
 }

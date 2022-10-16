@@ -27,6 +27,11 @@ public class Ssn {
         this.countryCode = countryCode;
     }
 
+    public char getControlCharacter() {
+        char[] ssnCharArray = ssn.toCharArray();
+        return ssnCharArray[ssnCharArray.length-1];
+    }
+
     @Override
     public String toString() {
         return "Ssn{" +

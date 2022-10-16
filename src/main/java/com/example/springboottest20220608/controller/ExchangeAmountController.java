@@ -28,6 +28,9 @@ public class ExchangeAmountController {
         BigDecimal resultValue = new BigDecimal(exchangeAmount.getFrom_amount());
 
         // check all conditions of EUR, SEK and USD exchange
+
+        // This block of code could be extracted and simplified:
+
         if (exchangeAmount.getFrom().equalsIgnoreCase("EUR") && exchangeAmount.getTo().equalsIgnoreCase("SEK")) {
             return exchangeAmount.toString()
                     + "\nResult: "
