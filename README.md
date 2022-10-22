@@ -1,4 +1,4 @@
-# Springboot test 20220608
+# SSN-validation-currency-exchange
 ## A backend api server for validating Social Security Number(SSN) and currency exchange among EUR, SEK and USD
 
 ## How to run the application
