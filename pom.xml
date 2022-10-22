@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>springboot-test20220608</artifactId>
+    <artifactId>SSN-validation-currency-exchange</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springboot-test20220608</name>
-    <description>springboot-test20220608</description>
+    <name>SSN-validation-currency-exchange</name>
+    <description>A backend application for SSN validation and real-time currency exchange.</description>
     <properties>
         <java.version>17</java.version>
     </properties>

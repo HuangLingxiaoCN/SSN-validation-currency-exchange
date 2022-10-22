@@ -6,10 +6,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class SpringbootTest20220608Application {
+public class SSNValidationCurrencyExchange {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringbootTest20220608Application.class, args);
+        SpringApplication.run(SSNValidationCurrencyExchange.class, args);
     }
 
 }

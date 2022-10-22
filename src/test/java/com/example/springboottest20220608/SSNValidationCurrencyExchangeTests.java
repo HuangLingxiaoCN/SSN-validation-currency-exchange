@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-class SpringbootTest20220608ApplicationTests {
+class SSNValidationCurrencyExchangeTests {
 
     private ControlCharacter controlCharacter = new ControlCharacter();
 
