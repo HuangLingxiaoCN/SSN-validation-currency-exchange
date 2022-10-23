@@ -2,20 +2,42 @@ package com.example.springboottest20220608;
 
 import com.example.springboottest20220608.entity.ControlCharacter;
 import com.example.springboottest20220608.entity.Ssn;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class SSNValidationCurrencyExchangeTests {
 
-    private ControlCharacter controlCharacter = new ControlCharacter();
+    private static ControlCharacter controlCharacter;
+
+    @BeforeAll
+    public static void setup() {
+        controlCharacter = new ControlCharacter();
+        System.out.println("Start testing ...");
+    }
+
+    @AfterAll
+    public static void teardown() {
+        System.out.println("End testing ...");
+    }
 
     @Test
     public void ssnController_length() {
         Ssn ssn = new Ssn("100598-657Y", "358");
         assertEquals(11, ssn.getSsn().length());
+    }
+
+    @Test
+    public void ssnController_lengthException() {
+        assertThrows(AssertionError.class, () -> {
+            Ssn ssn = new Ssn("100598-657YX", "358");
+            assertEquals(11, ssn.getSsn().length());
+        });
     }
 
     @Test
